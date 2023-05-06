@@ -1,13 +1,38 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+// Set up mySQL connection
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  dialect: 'mysql',
+  logging: console.log,
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000,
+  },
+});
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection to the MySQL database on AWS has been established successfully.');
+  })
+  .catch((err) => {
+    console.error('Unable to connect to the MySQL database on AWS:', err);
+  });
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
