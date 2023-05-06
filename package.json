@@ -8,6 +8,7 @@
     "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart"
   },
   "dependencies": {
+    "@prisma/client": "^4.13.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.0.3",
@@ -18,8 +19,7 @@
     "morgan": "~1.9.1",
     "mysql2": "^3.2.4",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "sequelize": "^6.31.1"
+    "react-dom": "^16.14.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
