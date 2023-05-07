@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
+
+model Author {
+  id          Int       @id @default(autoincrement())
+  firstName   String    @db.VarChar(100)
+  familyName  String    @db.VarChar(100)
+  dateOfBirth DateTime? // Optional field
+  dateOfDeath DateTime? // Optional field
+  books       Book[]
+}
+
+model Book {
+  id            Int            @id @default(autoincrement())
+  title         String
+  author        Author         @relation(fields: [authorId], references: [id])
+  authorId      Int
+  summary       String
+  isbn          String         @unique
+  bookInstances BookInstance[]
+  genres        BookGenre[]
+}
+
+model BookInstance {
+  id       Int      @id @default(autoincrement())
+  book     Book     @relation(fields: [bookId], references: [id])
+  bookId   Int
+  imprint  String
+  status   Status   @default(Maintenance)
+  due_back DateTime @default(now())
+}
+
+enum Status {
+  Available
+  Maintenance
+  Loaned
+  Reserved
+}
+
+model Genre {
+  id     Int         @id @default(autoincrement())
+  name   String
+  genres BookGenre[]
+}
+
+// Join table for many-to-many relationship between Books and Genres
+model BookGenre {
+  id      Int   @id @default(autoincrement())
+  book    Book  @relation(fields: [bookId], references: [id])
+  bookId  Int
+  genre   Genre @relation(fields: [genreId], references: [id])
+  genreId Int
+
+  @@unique([bookId, genreId])
+}
