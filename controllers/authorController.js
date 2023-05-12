@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const asyncHandler = require('express-async-handler')
 
 // Display list of all authors
 exports.author_list = asyncHandler(async (req, res, next) => {
